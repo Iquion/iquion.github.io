@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>IQUION</title>
+  <title>Iquion</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- Load Inter font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,6 +63,7 @@
       position: relative;
       min-height: 100vh;
       display: flex;
+      flex-direction: column; /* Allow hero and terminal to stack */
       align-items: center;
       justify-content: center;
       padding: 40px 18px; /* Add padding for small screens */
@@ -348,6 +349,76 @@
       color: var(--accent);
     }
 
+    /* --- 6b. ROS Terminal Simulation (NEW) --- */
+    .terminal-container {
+      max-width: 980px; /* Match the hero card */
+      width: 100%;
+      margin-top: 24px; /* Space below the card */
+      height: 200px; /* Fixed height */
+      background: rgba(2, 6, 23, 0.95); /* Dark background */
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Menlo', 'Consolas', 'Courier New', monospace;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(18px);
+    }
+
+    .terminal-header {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-soft);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .terminal-output {
+      flex-grow: 1;
+      overflow-y: auto; /* Scroll for old messages */
+      padding: 10px 12px;
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    /* Custom Scrollbar for Terminal */
+    .terminal-output::-webkit-scrollbar {
+      width: 6px;
+    }
+    .terminal-output::-webkit-scrollbar-thumb {
+      background: var(--border-soft);
+      border-radius: 3px;
+    }
+    .terminal-output::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* Log message styles */
+    .terminal-output .log-line {
+      display: flex;
+    }
+    .terminal-output .log-time {
+      color: var(--text-soft);
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .terminal-output .log-level {
+      font-weight: 600;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .terminal-output .log-msg {
+      white-space: pre-wrap; /* Allow wrapping */
+      word-break: break-all;
+    }
+
+    .terminal-output .log-info { color: var(--accent); } /* Blue */
+    .terminal-output .log-warn { color: var(--danger); } /* Orange */
+    .terminal-output .log-success { color: var(--success); } /* Green */
+    .terminal-output .log-debug { color: var(--accent-alt); } /* Purple */
+
     /* --- 7. Responsive --- */
     @media (max-width: 800px) {
       .hero {
@@ -376,7 +447,7 @@
   <div class="bg-layer">
     <div class="bg-grid" id="bgGrid"></div>
     <div class="bg-pulse" id="pulse1"></div>
-    <div class="bg-pulse" id="pulse2"></div>
+    <div classs="bg-pulse" id="pulse2"></div>
     <div class="bg-orbit"></div>
   </div>
 
@@ -388,9 +459,9 @@
       <div>
         <div class="wip-tag">
           <div class="wip-dot"></div>
-          IQUION / Work in progress
+          Iquion / Work in progress
         </div>
-        <div class="logo-text">IQUION</div>
+        <div class="logo-text">Iquion</div>
         <div class="tagline">
           Precise robotics and vision for real-world systems. Quietly being assembled.
         </div>
@@ -443,6 +514,15 @@
       </div>
       
     </section>
+
+    <!-- NEW: ROS Terminal Simulation -->
+    <div class="terminal-container" id="rosTerminalContainer">
+      <div class="terminal-header">ROS_CORE_LOG</div>
+      <div class="terminal-output" id="rosTerminalOutput">
+        <!-- Logs will be dynamically inserted here -->
+      </div>
+    </div>
+
   </main>
 
   <script>
@@ -462,6 +542,9 @@
       const beam = document.getElementById("beam");
       const scoreValue = document.getElementById("scoreValue");
       const armToggle = document.getElementById("armToggle");
+      
+      // NEW: Get terminal output element
+      const rosTerminalOutput = document.getElementById("rosTerminalOutput");
 
       // Check for critical elements. If they are missing, stop the script.
       if (!card || !svg || !j1 || !j2) {
@@ -523,17 +606,77 @@
             
             if (followCursor) {
               armToggle.innerHTML = '<div class="arm-label-icon"></div>Mode: Cursor-linked';
+              // NEW: Add log
+              logToTerminal('Switched to CURSOR_LINKED mode. Awaiting user input.', 'INFO');
             } else {
               armToggle.innerHTML = '<div class="arm-label-icon"></div>Mode: Auto-align';
+              // NEW: Add log
+              logToTerminal('Switched to AUTO_ALIGN mode. Acquiring next target...', 'INFO');
             }
           }
         });
       }
 
       // --- 4. Animation Functions ---
-// ... existing code ... -->
+
+      /**
+       * NEW: Logs a message to the simulated ROS terminal.
+       * @param {string} message - The text to log.
+       * @param {string} level - 'INFO', 'WARN', 'SUCCESS', 'DEBUG'
+       */
+      function logToTerminal(message, level = 'INFO') {
+        if (!rosTerminalOutput) return;
+
+        const now = new Date();
+        const time = `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}]`;
+        const levelClass = `log-${level.toLowerCase()}`;
+        
+        const line = document.createElement('div');
+        line.className = 'log-line';
+
+        line.innerHTML = `
+          <span class="log-time">${time}</span>
+          <span class="log-level ${levelClass}">[${level}]</span>
+          <span class="log-msg">${message}</span>
+        `;
+        
+        rosTerminalOutput.appendChild(line);
+
+        // Auto-scroll to the bottom
+        rosTerminalOutput.scrollTop = rosTerminalOutput.scrollHeight;
+      }
+
+      // --- START OF FIXED CODE ---
+      // The following functions were missing from the script
+
+      /**
+       * Updates the background grid/pulse parallax effect based on mouse position.
+       * @param {number} x - The smoothed global X coordinate.
+       * @param {number} y - The smoothed global Y coordinate.
+       */
       function updateBackground(x, y) {
-// ... existing code ... -->
+        if (!grid && !pulse1 && !pulse2 && !card) return; // No elements to move
+
+        const nx = x / window.innerWidth - 0.5; // Normalized x (-0.5 to 0.5)
+        const ny = y / window.innerHeight - 0.5; // Normalized y (-0.5 to 0.5)
+
+        // 1. Move the background grid
+        const tx = nx * -30;
+        const ty = ny * -30;
+        if (grid) grid.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+
+        // 2. Move the pulse effects
+        const p1x = nx * 32;
+        const p1y = ny * 18;
+        const p2x = nx * -34;
+        const p2y = ny * -22;
+        if (pulse1) pulse1.style.transform = `translate3d(${p1x}px, ${p1y}px, 0)`;
+        if (pulse2) pulse2.style.transform = `translate3d(${p2x}px, ${p2y}px, 0)`;
+
+        // 3. Tilt the main card
+        const tiltX = ny * 3.5; // Tilt on X-axis based on Y-mouse
+        const tiltY = -nx * 3.5; // Tilt on Y-axis based on X-mouse
+        if (card) card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
       }
 
       /**
@@ -632,6 +775,9 @@
           beam.classList.add("active");
         }
       }
+      
+      // --- END OF FIXED CODE ---
+
 
       /**
        * Creates the target nodes and adds them to the SVG.
@@ -640,6 +786,9 @@
         const baseX = 120, baseY = 210;
         const minR = 40, maxR = L1 + L2 - 12;
         const angleMin = -2.1, angleMax = -0.9; // Target arc (top-left quadrant)
+
+        // NEW: Add log message
+        logToTerminal(`Initializing ${NUM_TARGETS} target nodes...`, 'INFO');
 
         for (let i = 0; i < NUM_TARGETS; i++) {
           const c = document.createElementNS(SVG_NS, "circle");
@@ -660,6 +809,9 @@
           c.setAttribute("class", "target-node");
           c.setAttribute("cx", x.toFixed(2));
           c.setAttribute("cy", y.toFixed(2));
+
+          // NEW: Add log for each target
+          logToTerminal(`Spawned target_node_${i} at (${x.toFixed(1)}, ${y.toFixed(1)})`, 'DEBUG');
 
           svg.insertBefore(c, beam); // Insert before the beam so beam is on top
 
@@ -705,6 +857,8 @@
               t.elem.classList.add("caught");
               capturedCount++;
               updateScore();
+              // NEW: Add log
+              logToTerminal(`Gripper locked on target_node_${targets.indexOf(t)}. (${capturedCount}/${NUM_TARGETS})`, 'SUCCESS');
             }
           } else {
             // If caught, lock target to gripper
@@ -725,6 +879,9 @@
             completed = true;
             scoreValue.textContent = `${capturedCount} / ${NUM_TARGETS} · aligned`;
             
+            // NEW: Add log
+            logToTerminal('All target nodes aligned. System idle.', 'SUCCESS');
+
             // NEW: Update button to be a reset button
             if (armToggle) {
               armToggle.innerHTML = '<div class="arm-label-icon"></div>Click to Reset';
@@ -744,7 +901,21 @@
        * @returns {object} An {x, y} object in global window coordinates.
        */
       function getAutoTarget() {
-// ... existing code ... -->
+        // FIX: Define 'rect' here. It was missing, causing the error.
+        const rect = svg.getBoundingClientRect(); 
+        
+        const uncaught = targets.filter(t => !t.caught);
+        
+        if (uncaught.length > 0) {
+          const t = uncaught[0]; // Just target the first one
+          return {
+            x: rect.left + t.x,
+            y: rect.top + t.y
+          };
+        }
+        
+        // If all are caught, just aim at the center
+        const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
         return { x: cx, y: cy };
       }
@@ -753,6 +924,9 @@
        * NEW: Resets the game state to play again.
        */
       function resetGame() {
+        // NEW: Add log
+        logToTerminal('Reset signal received. Re-initializing environment...', 'WARN');
+
         // 1. Remove old target elements from SVG
         targets.forEach(t => t.elem.remove());
         
@@ -823,6 +997,11 @@
       // --- 5. Initialization ---
       initTargets();
       requestAnimationFrame(animate); // Start the animation loop
+
+      // NEW: Initial log messages
+      logToTerminal('ROS Core [joint_state_publisher] started.', 'INFO');
+      logToTerminal('ROS Core [robot_state_publisher] started.', 'INFO');
+      logToTerminal('ROS Core [ik_node] started. Awaiting target...', 'INFO');
 
     }); // End of DOMContentLoaded
   </script>
