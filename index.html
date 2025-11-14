@@ -4,52 +4,74 @@
   <meta charset="UTF-8" />
   <title>IQUION — Robotics in Progress</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Load Inter font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
   <style>
     :root {
+      /* Color Palette */
       --bg-top: #020817;
       --bg-mid: #020817;
       --bg-bottom: #020817;
-      --accent: #38bdf8;
+      --accent: #38bdf8; /* Light Blue */
       --accent-soft: rgba(56, 189, 248, 0.18);
-      --accent-alt: #a855f7;
+      --accent-alt: #a855f7; /* Purple */
       --grid-color: rgba(148, 163, 253, 0.14);
       --border-soft: rgba(148, 163, 253, 0.26);
       --text-main: #e5e7eb;
       --text-soft: #9ca3af;
-      --iquion: #f9fafb;
-      --danger: #f97316;
+      --text-highlight: #f9fafb; /* For Logo */
+      --danger: #f97316; /* Orange for 'off' state */
+      --success: #22c55e; /* Green for 'on' state */
     }
 
-    * {
+    /* --- 1. Global Reset & Base Styles --- */
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    html,
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(56,189,248,0.14) 0%, transparent 40%),
-        radial-gradient(circle at top right, rgba(168,85,247,0.10) 0%, transparent 40%),
-        linear-gradient(to bottom, var(--bg-top), var(--bg-mid), var(--bg-bottom));
-      color: var(--text-main);
-      min-height: 100vh;
-      overflow-x: hidden;
+      min-height: 100%;
     }
 
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background:
+        /* Top-left radial glow */
+        radial-gradient(circle at top, rgba(56,189,248,0.14) 0%, transparent 40%),
+        /* Top-right radial glow */
+        radial-gradient(circle at top right, rgba(168,85,247,0.10) 0%, transparent 40%),
+        /* Base linear gradient */
+        linear-gradient(to bottom, var(--bg-top), var(--bg-mid), var(--bg-bottom));
+      color: var(--text-main);
+      overflow-x: hidden;
+      /* Improve font rendering */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* --- 2. Page Layout --- */
     .page {
       position: relative;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px 18px;
+      padding: 40px 18px; /* Add padding for small screens */
     }
 
-    /* Background grid */
+    /* --- 3. Background Effects --- */
     .bg-layer {
       position: fixed;
-      inset: -60px;
+      inset: -60px; /* Extend beyond viewport to avoid hard edges */
       z-index: -2;
       overflow: hidden;
       pointer-events: none;
@@ -78,7 +100,6 @@
       top: 16%;
       right: 10%;
       opacity: 0.10;
-      pointer-events: none;
     }
 
     .bg-pulse {
@@ -91,13 +112,12 @@
       filter: blur(1px);
       transition: transform 0.16s ease-out, opacity 0.2s ease-out;
       will-change: transform, opacity;
-      pointer-events: none;
     }
 
     .bg-pulse:nth-child(2) { top: 10%; left: 10%; }
     .bg-pulse:nth-child(3) { bottom: 12%; right: 14%; }
 
-    /* Hero layout */
+    /* --- 4. Hero Card --- */
     .hero {
       position: relative;
       max-width: 980px;
@@ -105,6 +125,7 @@
       padding: 26px 26px 22px;
       border-radius: 24px;
       border: 1px solid var(--border-soft);
+      /* Glassmorphism effect: transparent gradient + background color */
       background:
         radial-gradient(circle at top left,
           rgba(56, 189, 248, 0.05),
@@ -114,16 +135,20 @@
         0 22px 65px rgba(15, 23, 42, 0.92),
         0 0 36px rgba(79, 70, 229, 0.22);
       backdrop-filter: blur(18px);
+      
+      /* Layout: 2 columns, falls to 1 on mobile */
       display: grid;
       grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
       gap: 26px;
       align-items: center;
       overflow: hidden;
+      
+      /* For 3D tilt effect */
       transform-style: preserve-3d;
       transition: transform 0.16s ease-out, box-shadow 0.16s ease-out;
     }
 
-    /* Left side text */
+    /* --- 5. Hero Content --- */
     .wip-tag {
       display: inline-flex;
       align-items: center;
@@ -132,6 +157,7 @@
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 253, 0.34);
       font-size: 9px;
+      font-weight: 500;
       color: var(--text-soft);
       margin-bottom: 10px;
       backdrop-filter: blur(12px);
@@ -142,8 +168,8 @@
       width: 7px;
       height: 7px;
       border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 8px #22c55e;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
     }
 
     .logo-text {
@@ -151,20 +177,15 @@
       font-weight: 600;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: var(--iquion);
+      color: var(--text-highlight);
       margin-bottom: 6px;
     }
 
     .tagline {
       font-size: 13px;
       color: var(--text-soft);
-      margin-bottom: 4px;
-    }
-
-    .tagline-en {
-      font-size: 11px;
-      color: rgba(156, 163, 175, 0.9);
       margin-bottom: 14px;
+      max-width: 400px; /* Prevent long lines */
     }
 
     .score-wrap {
@@ -173,7 +194,7 @@
       gap: 2px;
       padding: 4px 8px;
       border-radius: 10px;
-      border: 1px solid rgba(148,163,253,0.26);
+      border: 1px solid var(--border-soft);
       background: rgba(4,7,20,0.98);
       font-size: 8px;
       color: rgba(148,163,253,0.9);
@@ -190,12 +211,12 @@
       font-weight: 500;
     }
 
-    /* Right side: arm + game */
+    /* --- 6. Arm & SVG --- */
     .arm-wrapper {
       position: relative;
       width: 100%;
       max-width: 320px;
-      justify-self: end;
+      justify-self: end; /* Aligns to the right in the grid */
     }
 
     .arm-label {
@@ -204,7 +225,7 @@
       right: 10px;
       padding: 3px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 253, 0.26);
+      border: 1px solid var(--border-soft);
       font-size: 8px;
       color: var(--text-soft);
       backdrop-filter: blur(10px);
@@ -215,7 +236,7 @@
       z-index: 2;
       cursor: pointer;
       user-select: none;
-      transition: border-color 0.16s ease-out, color 0.16s ease-out, background 0.16s ease-out;
+      transition: all 0.16s ease-out;
     }
 
     .arm-label-icon {
@@ -224,10 +245,11 @@
       border-radius: 50%;
       border: 1px solid var(--accent);
       box-shadow: 0 0 8px var(--accent);
-      transition: border-color 0.16s, box-shadow 0.16s, background-color 0.16s;
+      transition: all 0.16s;
       background-color: transparent;
     }
 
+    /* 'Off' state for the toggle button */
     .arm-label.off {
       border-color: rgba(248, 250, 252, 0.26);
       color: rgba(248, 250, 252, 0.78);
@@ -240,6 +262,13 @@
       background-color: rgba(248, 250, 252, 0.08);
     }
 
+    /* NEW: Style for the 'success' (reset) button state */
+    .arm-label-icon.success {
+      border-color: var(--success);
+      box-shadow: 0 0 8px var(--success);
+      background-color: rgba(34, 197, 94, 0.1);
+    }
+
     svg#robotArm {
       width: 100%;
       height: auto;
@@ -248,6 +277,7 @@
       filter: drop-shadow(0 14px 26px rgba(15,23,42,0.96));
     }
 
+    /* SVG Element Styles */
     .arm-base {
       fill: rgba(7, 13, 30, 1);
       stroke: rgba(148, 163, 253, 0.4);
@@ -287,18 +317,18 @@
     }
 
     .target-node {
-      fill: rgba(168, 85, 247, 0.8);
+      fill: rgba(168, 85, 247, 0.8); /* Purple */
       stroke: rgba(248, 250, 252, 0.6);
       stroke-width: 0.4;
       transition: transform 0.12s ease-out, fill 0.12s ease-out, stroke 0.12s ease-out;
     }
 
     .target-node.caught {
-      fill: var(--accent);
+      fill: var(--accent); /* Blue */
       stroke: rgba(248, 250, 252, 0.95);
       transform: scale(1.15);
     }
-
+    
     .hint {
       position: absolute;
       bottom: 6px;
@@ -318,8 +348,10 @@
       color: var(--accent);
     }
 
+    /* --- 7. Responsive --- */
     @media (max-width: 800px) {
       .hero {
+        /* Stack columns vertically */
         grid-template-columns: 1fr;
         gap: 18px;
       }
@@ -330,18 +362,17 @@
       .tagline {
         font-size: 12px;
       }
-      .tagline-en {
-        font-size: 10px;
-      }
       .arm-wrapper {
         max-width: 260px;
-        margin: 0 auto 4px;
+        margin: 0 auto 4px; /* Center the arm */
+        justify-self: center;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Background -->
+  
+  <!-- Background Parallax Layers -->
   <div class="bg-layer">
     <div class="bg-grid" id="bgGrid"></div>
     <div class="bg-pulse" id="pulse1"></div>
@@ -350,8 +381,10 @@
   </div>
 
   <main class="page">
+    <!-- Main Content Card -->
     <section class="hero" id="heroCard">
-      <!-- Left: minimal teaser -->
+      
+      <!-- Left Column: Text Content -->
       <div>
         <div class="wip-tag">
           <div class="wip-dot"></div>
@@ -359,9 +392,6 @@
         </div>
         <div class="logo-text">IQUION</div>
         <div class="tagline">
-          Precizna robotika i vid za stvarne sustave. Trenutno u fazi tihog sklapanja.
-        </div>
-        <div class="tagline-en">
           Precise robotics and vision for real-world systems. Quietly being assembled.
         </div>
         <div class="score-wrap">
@@ -370,26 +400,27 @@
         </div>
       </div>
 
-      <!-- Right: robotic arm + mini game -->
+      <!-- Right Column: Interactive SVG Arm -->
       <div class="arm-wrapper">
         <div class="arm-label" id="armToggle">
           <div class="arm-label-icon"></div>
           Mode: Cursor-linked
         </div>
+        
         <svg id="robotArm" viewBox="0 0 240 260" xmlns="http://www.w3.org/2000/svg">
-          <!-- Base -->
+          <!-- Static Base -->
           <rect x="22" y="210" width="196" height="24" rx="8" class="arm-base" />
           <rect x="52" y="198" width="44" height="6" rx="3" class="arm-base" />
           <circle cx="120" cy="210" r="12" class="arm-joint" />
           <circle cx="120" cy="210" r="4" fill="#38bdf8" />
 
-          <!-- First link -->
+          <!-- Arm Link 1 (controlled by JS) -->
           <g id="joint1" transform="translate(120,210)">
             <rect x="0" y="-7" width="78" height="14" rx="6" class="arm-link" />
             <circle cx="0" cy="0" r="5.4" class="arm-joint" />
           </g>
 
-          <!-- Second link + gripper -->
+          <!-- Arm Link 2 & Gripper (controlled by JS) -->
           <g id="joint2" transform="translate(198,210)">
             <rect x="0" y="-5" width="66" height="10" rx="5" class="arm-link" />
             <circle cx="0" cy="0" r="4.6" class="arm-joint" />
@@ -399,313 +430,401 @@
             </g>
           </g>
 
-          <!-- Beam -->
+          <!-- Visual Effects (controlled by JS) -->
           <polygon id="beam" class="beam" points="0,0 0,0 0,0"></polygon>
-
-          <!-- Aim dot -->
           <circle id="aimDot" cx="180" cy="80" r="3.4" class="aim-dot" />
 
-          <!-- SVG hint -->
-          <text x="8" y="248"
-            style="fill:rgba(148,163,253,0.7);font-size:7px;font-family:system-ui;">
-            Click mode to toggle cursor / auto. Touch nodes to link them.
-          </text>
+          <!-- Note: Removed the hardcoded <text> hint, as the HTML .hint div is more flexible -->
         </svg>
+        
         <div class="hint">
           <span>◆</span> All nodes are reachable. Manual or auto-alignment on click.
         </div>
       </div>
+      
     </section>
   </main>
 
   <script>
-    const grid = document.getElementById("bgGrid");
-    const pulse1 = document.getElementById("pulse1");
-    const pulse2 = document.getElementById("pulse2");
-    const card = document.getElementById("heroCard");
-    const svg = document.getElementById("robotArm");
-    const j1 = document.getElementById("joint1");
-    const j2 = document.getElementById("joint2");
-    const aimDot = document.getElementById("aimDot");
-    const beam = document.getElementById("beam");
-    const scoreValue = document.getElementById("scoreValue");
-    const armToggle = document.getElementById("armToggle");
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', () => {
 
-    const L1 = 78;
-    const L2 = 66;
-    const NUM_TARGETS = 5;
+      // --- 1. Element Cache ---
+      // Get all necessary DOM elements at the start for efficiency.
+      const grid = document.getElementById("bgGrid");
+      const pulse1 = document.getElementById("pulse1");
+      const pulse2 = document.getElementById("pulse2");
+      const card = document.getElementById("heroCard");
+      const svg = document.getElementById("robotArm");
+      const j1 = document.getElementById("joint1"); // Joint 1 <g> element
+      const j2 = document.getElementById("joint2"); // Joint 2 <g> element
+      const aimDot = document.getElementById("aimDot");
+      const beam = document.getElementById("beam");
+      const scoreValue = document.getElementById("scoreValue");
+      const armToggle = document.getElementById("armToggle");
 
-    const state = {
-      mouseX: window.innerWidth / 2,
-      mouseY: window.innerHeight / 2,
-      smoothX: window.innerWidth / 2,
-      smoothY: window.innerHeight / 2,
-      lastMove: performance.now()
-    };
-
-    let followCursor = true;
-    let capturedCount = 0;
-    let completed = false;
-    const targets = [];
-
-    const IDLE_DELAY = 2200;
-    const IDLE_RADIUS = 40;
-
-    window.addEventListener("pointermove", (e) => {
-      state.mouseX = e.clientX;
-      state.mouseY = e.clientY;
-      state.lastMove = performance.now();
-    });
-
-    if (armToggle) {
-      armToggle.addEventListener("click", () => {
-        followCursor = !followCursor;
-        if (followCursor) {
-          armToggle.classList.remove("off");
-          armToggle.innerHTML = '<div class="arm-label-icon"></div>Mode: Cursor-linked';
-        } else {
-          armToggle.classList.add("off");
-          armToggle.innerHTML = '<div class="arm-label-icon"></div>Mode: Auto-align';
-        }
-      });
-    }
-
-    function updateBackground(x, y) {
-      const nx = x / window.innerWidth - 0.5;
-      const ny = y / window.innerHeight - 0.5;
-
-      const tx = nx * -30;
-      const ty = ny * -30;
-      if (grid) grid.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-
-      const p1x = nx * 32;
-      const p1y = ny * 18;
-      const p2x = nx * -34;
-      const p2y = ny * -22;
-      if (pulse1) pulse1.style.transform = `translate3d(${p1x}px, ${p1y}px, 0)`;
-      if (pulse2) pulse2.style.transform = `translate3d(${p2x}px, ${p2y}px, 0)`;
-
-      const tiltX = ny * 3.5;
-      const tiltY = -nx * 3.5;
-      if (card) card.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-    }
-
-    function updateArm(globalX, globalY, outGripperPos) {
-      if (!svg) return;
-
-      const rect = svg.getBoundingClientRect();
-      const baseX = 120;
-      const baseY = 210;
-
-      let targetX = globalX - rect.left;
-      let targetY = globalY - rect.top;
-
-      let dx = targetX - baseX;
-      let dy = targetY - baseY;
-
-      let dist = Math.sqrt(dx * dx + dy * dy) || 0.001;
-      const minReach = 26;
-      const maxReach = L1 + L2 - 4;
-
-      let clamped = dist;
-      if (clamped < minReach) clamped = minReach;
-      if (clamped > maxReach) clamped = maxReach;
-
-      const scale = clamped / dist;
-      dx *= scale;
-      dy *= scale;
-
-      const a = L1;
-      const b = L2;
-      const c = clamped;
-
-      const cosAlpha = (a * a + c * c - b * b) / (2 * a * c);
-      const alpha = Math.acos(Math.max(-1, Math.min(1, cosAlpha)));
-
-      const baseAngle = Math.atan2(dy, dx);
-      const theta1 = baseAngle - alpha;
-
-      const cosBeta = (a * a + b * b - c * c) / (2 * a * b);
-      const beta = Math.acos(Math.max(-1, Math.min(1, cosBeta)));
-      const theta2 = Math.PI - beta;
-
-      const deg1 = theta1 * 180 / Math.PI;
-      const deg2 = theta2 * 180 / Math.PI;
-
-      j1.setAttribute("transform",
-        `translate(${baseX},${baseY}) rotate(${deg1})`
-      );
-
-      const joint2X = baseX + Math.cos(theta1) * L1;
-      const joint2Y = baseY + Math.sin(theta1) * L1;
-
-      j2.setAttribute("transform",
-        `translate(${joint2X},${joint2Y}) rotate(${deg1 + deg2})`
-      );
-
-      const gripperX = joint2X + Math.cos(theta1 + theta2) * L2;
-      const gripperY = joint2Y + Math.sin(theta1 + theta2) * L2;
-
-      outGripperPos.x = gripperX;
-      outGripperPos.y = gripperY;
-
-      const aimX = baseX + dx;
-      const aimY = baseY + dy;
-      aimDot.setAttribute("cx", aimX);
-      aimDot.setAttribute("cy", aimY);
-
-      if (beam) {
-        const spread = 5;
-        const tipOffset = 10;
-        const p1x = gripperX;
-        const p1y = gripperY;
-        const p2x = aimX - spread;
-        const p2y = aimY + tipOffset;
-        const p3x = aimX + spread;
-        const p3y = aimY + tipOffset;
-        beam.setAttribute("points", `${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`);
-        beam.classList.add("active");
+      // Check for critical elements. If they are missing, stop the script.
+      if (!card || !svg || !j1 || !j2) {
+        console.error("Critical elements for the animation are missing.");
+        return;
       }
-    }
 
-    function initTargets() {
-      if (!svg) return;
-      const ns = "http://www.w3.org/2000/svg";
+      // --- 2. Constants & State ---
+      const L1 = 78; // Length of the first arm link
+      const L2 = 66; // Length of the second arm link
+      const NUM_TARGETS = 5;
+      const IDLE_DELAY = 2200; // ms before idle roam starts
+      const IDLE_RADIUS = 40;  // how far the arm roams when idle
+      const SVG_NS = "http://www.w3.org/2000/svg"; // SVG Namespace
 
-      const baseX = 120;
-      const baseY = 210;
-      const minR = 40;
-      const maxR = L1 + L2 - 12;
-      const angleMin = -2.1;
-      const angleMax = -0.9;
+      // Global state object
+      const state = {
+        mouseX: window.innerWidth / 2,
+        mouseY: window.innerHeight / 2,
+        smoothX: window.innerWidth / 2, // Smoothed/interpolated mouse X
+        smoothY: window.innerHeight / 2, // Smoothed/interpolated mouse Y
+        lastMove: performance.now()      // Timestamp of the last pointer move
+      };
 
-      for (let i = 0; i < NUM_TARGETS; i++) {
-        const c = document.createElementNS(ns, "circle");
+      let followCursor = true; // Arm mode: true = follow cursor, false = auto-align
+      let capturedCount = 0;
+      let completed = false;
+      const targets = [];      // Array to store target node objects
+      
+      // An object to store the gripper's calculated position (passed by reference)
+      const gripperPos = { x: 0, y: 0 };
 
-        const angle = angleMin + Math.random() * (angleMax - angleMin);
-        const r = minR + Math.random() * (maxR - minR);
+      // --- 3. Event Listeners ---
 
-        let x = baseX + r * Math.cos(angle);
-        let y = baseY + r * Math.sin(angle);
+      /**
+       * Update mouse position state on pointer move.
+       */
+      window.addEventListener("pointermove", (e) => {
+        state.mouseX = e.clientX;
+        state.mouseY = e.clientY;
+        state.lastMove = performance.now();
+      }, { passive: true }); // Use passive listener for better scroll performance
 
-        // sigurnosno ograničenje u viewBoxu
-        x = Math.max(30, Math.min(210, x));
-        y = Math.max(20, Math.min(150, y));
-
-        const radius = 3 + Math.random() * 1.8;
-
-        c.setAttribute("r", radius.toFixed(2));
-        c.setAttribute("class", "target-node");
-        c.setAttribute("cx", x.toFixed(2));
-        c.setAttribute("cy", y.toFixed(2));
-
-        svg.insertBefore(c, beam);
-
-        targets.push({
-          elem: c,
-          baseX: x,
-          baseY: y,
-          amp: 4 + Math.random() * 6,
-          speed: 0.6 + Math.random() * 0.8,
-          phase: Math.random() * Math.PI * 2,
-          caught: false,
-          x: x,
-          y: y
+      /**
+       * Toggle arm follow mode on button click.
+       * If the game is completed, this button acts as a reset.
+       */
+      if (armToggle) {
+        armToggle.addEventListener("click", () => {
+          
+          if (completed) {
+            // --- Game is over, button is now "Reset" ---
+            resetGame(); // Call the new reset function
+          
+          } else {
+            // --- Game is active, toggle mode ---
+            followCursor = !followCursor;
+            armToggle.classList.toggle("off", !followCursor);
+            
+            if (followCursor) {
+              armToggle.innerHTML = '<div class="arm-label-icon"></div>Mode: Cursor-linked';
+            } else {
+              armToggle.innerHTML = '<div class="arm-label-icon"></div>Mode: Auto-align';
+            }
+          }
         });
       }
-    }
 
-    function updateTargets(now, gripperPos) {
-      if (!svg || targets.length === 0) return;
+      // --- 4. Animation Functions ---
+// ... existing code ... -->
+      function updateBackground(x, y) {
+// ... existing code ... -->
+      }
 
-      for (const t of targets) {
-        if (!t.caught) {
-          const tt = now / 1000 * t.speed + t.phase;
-          const x = t.baseX + Math.cos(tt) * t.amp;
-          const y = t.baseY + Math.sin(tt * 1.4) * t.amp * 0.7;
+      /**
+       * Calculates and applies 2-joint Inverse Kinematics (IK) to the robot arm.
+       * @param {number} globalX - The target X coordinate in window space.
+       * @param {number} globalY - The target Y coordinate in window space.
+       * @param {object} outGripperPos - An object {x, y} to be populated with the gripper's final coordinates.
+       */
+      function updateArm(globalX, globalY, outGripperPos) {
+        const rect = svg.getBoundingClientRect();
+        
+        // Base of the arm in SVG coordinates
+        const baseX = 120;
+        const baseY = 210;
 
-          t.x = x;
-          t.y = y;
-          t.elem.setAttribute("cx", x.toFixed(2));
-          t.elem.setAttribute("cy", y.toFixed(2));
+        // 1. Get local SVG coordinates for the true mouse position
+        let targetX = globalX - rect.left;
+        let targetY = globalY - rect.top;
 
-          const dx = x - gripperPos.x;
-          const dy = y - gripperPos.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+        // 2. Set the aimDot to this exact position (User's request)
+        aimDot.setAttribute("cx", targetX);
+        aimDot.setAttribute("cy", targetY);
 
-          if (dist < 9) {
-            t.caught = true;
-            t.elem.classList.add("caught");
-            capturedCount++;
-            updateScore();
+        // 3. Calculate distance vectors for IK (from base to target)
+        let dx = targetX - baseX;
+        let dy = targetY - baseY;
+        let dist = Math.sqrt(dx * dx + dy * dy) || 0.001; // Distance from base to target
+
+        // 4. Clamp the distance for the *physical arm*
+        const minReach = 26;
+        const maxReach = L1 + L2 - 4; // Max reach (minus a small buffer)
+        let clampedDist = dist;
+        if (clampedDist < minReach) clampedDist = minReach;
+        if (clampedDist > maxReach) clampedDist = maxReach;
+
+        // 5. Calculate the clamped dx/dy vector for the IK solver
+        // This is the point the arm *will actually reach for*.
+        const scale = clampedDist / dist;
+        let clampedDx = dx * scale;
+        let clampedDy = dy * scale;
+        
+        // --- IK Solver (using Law of Cosines) ---
+        // Uses the CLAMPED values
+        const a = L1;
+        const b = L2;
+        const c = clampedDist; // Clamped distance
+
+        // Angle for joint 1
+        const cosAlpha = (a * a + c * c - b * b) / (2 * a * c);
+        const alpha = Math.acos(Math.max(-1, Math.min(1, cosAlpha))); // Clamp to prevent Math domain error
+        const baseAngle = Math.atan2(clampedDy, clampedDx); // Use clamped vectors
+        const theta1 = baseAngle - alpha; // Final angle for link 1
+
+        // Angle for joint 2
+        const cosBeta = (a * a + b * b - c * c) / (2 * a * b);
+        const beta = Math.acos(Math.max(-1, Math.min(1, cosBeta)));
+        const theta2 = Math.PI - beta; // Final angle for link 2 (relative to link 1)
+
+        // Convert to degrees for SVG transform
+        const deg1 = theta1 * 180 / Math.PI;
+        const deg2 = theta2 * 180 / Math.PI;
+
+        // Apply transform to Joint 1
+        j1.setAttribute("transform",
+          `translate(${baseX},${baseY}) rotate(${deg1})`
+        );
+
+        // Calculate position of Joint 2
+        const joint2X = baseX + Math.cos(theta1) * L1;
+        const joint2Y = baseY + Math.sin(theta1) * L1;
+
+        // Apply transform to Joint 2
+        j2.setAttribute("transform",
+          `translate(${joint2X},${joint2Y}) rotate(${deg1 + deg2})`
+        );
+
+        // Calculate final gripper position (which is at the end of the clamped reach)
+        const gripperX = joint2X + Math.cos(theta1 + theta2) * L2;
+        const gripperY = joint2Y + Math.sin(theta1 + theta2) * L2;
+
+        // Populate the output object (passed by reference)
+        outGripperPos.x = gripperX;
+        outGripperPos.y = gripperY;
+
+        // Update the visual beam
+        if (beam) {
+          const spread = 5;
+          const tipOffset = 10;
+          // Start of beam: Gripper (clamped)
+          const p1x = gripperX, p1y = gripperY;
+          // End of beam: Mouse target (unclamped)
+          const p2x = targetX - spread, p2y = targetY + tipOffset;
+          const p3x = targetX + spread, p3y = targetY + tipOffset;
+          
+          beam.setAttribute("points", `${p1x},${p1y} ${p2x},${p2y} ${p3x},${p3y}`);
+          beam.classList.add("active");
+        }
+      }
+
+      /**
+       * Creates the target nodes and adds them to the SVG.
+       */
+      function initTargets() {
+        const baseX = 120, baseY = 210;
+        const minR = 40, maxR = L1 + L2 - 12;
+        const angleMin = -2.1, angleMax = -0.9; // Target arc (top-left quadrant)
+
+        for (let i = 0; i < NUM_TARGETS; i++) {
+          const c = document.createElementNS(SVG_NS, "circle");
+
+          const angle = angleMin + Math.random() * (angleMax - angleMin);
+          const r = minR + Math.random() * (maxR - minR);
+
+          let x = baseX + r * Math.cos(angle);
+          let y = baseY + r * Math.sin(angle);
+
+          // Clamp positions to stay within a visible box
+          x = Math.max(30, Math.min(210, x));
+          y = Math.max(20, Math.min(150, y));
+
+          const radius = 3 + Math.random() * 1.8;
+
+          c.setAttribute("r", radius.toFixed(2));
+          c.setAttribute("class", "target-node");
+          c.setAttribute("cx", x.toFixed(2));
+          c.setAttribute("cy", y.toFixed(2));
+
+          svg.insertBefore(c, beam); // Insert before the beam so beam is on top
+
+          targets.push({
+            elem: c,
+            baseX: x, baseY: y,
+            amp: 4 + Math.random() * 6,   // Wobble amplitude
+            speed: 0.6 + Math.random() * 0.8, // Wobble speed
+            phase: Math.random() * Math.PI * 2, // Wobble phase
+            caught: false,
+            x: x, y: y // Current position
+          });
+        }
+      }
+
+      /**
+       * Updates target node positions and checks for capture.
+       * @param {number} now - The current timestamp from requestAnimationFrame.
+       * @param {object} gripperPos - The current {x, y} position of the gripper.
+       */
+      function updateTargets(now, gripperPos) {
+        if (targets.length === 0) return;
+
+        for (const t of targets) {
+          if (!t.caught) {
+            // Make targets wobble
+            const tt = now / 1000 * t.speed + t.phase;
+            const x = t.baseX + Math.cos(tt) * t.amp;
+            const y = t.baseY + Math.sin(tt * 1.4) * t.amp * 0.7;
+
+            t.x = x;
+            t.y = y;
+            t.elem.setAttribute("cx", x.toFixed(2));
+            t.elem.setAttribute("cy", y.toFixed(2));
+
+            // Check for capture
+            const dx = x - gripperPos.x;
+            const dy = y - gripperPos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 9) { // 9px capture radius
+              t.caught = true;
+              t.elem.classList.add("caught");
+              capturedCount++;
+              updateScore();
+            }
+          } else {
+            // If caught, lock target to gripper
+            t.elem.setAttribute("cx", gripperPos.x.toFixed(2));
+            t.elem.setAttribute("cy", gripperPos.y.toFixed(2));
+          }
+        }
+      }
+
+      /**
+       * Updates the score display.
+       */
+      function updateScore() {
+        if (!scoreValue) return;
+        
+        if (capturedCount >= NUM_TARGETS) {
+          if (!completed) { // Runs only once when completed
+            completed = true;
+            scoreValue.textContent = `${capturedCount} / ${NUM_TARGETS} · aligned`;
+            
+            // NEW: Update button to be a reset button
+            if (armToggle) {
+              armToggle.innerHTML = '<div class="arm-label-icon"></div>Click to Reset';
+              armToggle.classList.remove("off"); 
+              // Find the new icon and add class (since innerHTML replaced it)
+              const icon = armToggle.querySelector('.arm-label-icon');
+              if (icon) icon.classList.add('success'); 
+            }
           }
         } else {
-          t.elem.setAttribute("cx", gripperPos.x.toFixed(2));
-          t.elem.setAttribute("cy", gripperPos.y.toFixed(2));
+          scoreValue.textContent = `${capturedCount} / ${NUM_TARGETS}`;
         }
       }
 
-      if (!completed && capturedCount >= NUM_TARGETS) {
-        completed = true;
-        scoreValue.textContent = `${capturedCount} / ${NUM_TARGETS} · aligned`;
+      /**
+       * Gets the next target position for 'Auto-align' mode.
+       * @returns {object} An {x, y} object in global window coordinates.
+       */
+      function getAutoTarget() {
+// ... existing code ... -->
+        const cy = rect.top + rect.height / 2;
+        return { x: cx, y: cy };
       }
-    }
 
-    function updateScore() {
-      if (!completed) {
-        scoreValue.textContent = `${capturedCount} / ${NUM_TARGETS}`;
+      /**
+       * NEW: Resets the game state to play again.
+       */
+      function resetGame() {
+        // 1. Remove old target elements from SVG
+        targets.forEach(t => t.elem.remove());
+        
+        // 2. Clear the targets array (this is a fast way to empty it)
+        targets.length = 0; 
+        
+        // 3. Reset state variables
+        capturedCount = 0;
+        completed = false;
+        
+        // 4. Re-initialize new targets
+        initTargets();
+        
+        // 5. Update score display
+        updateScore();
+        
+        // 6. Reset the toggle button to its original state
+        if (armToggle) {
+          armToggle.classList.toggle("off", !followCursor);
+          if (followCursor) {
+            armToggle.innerHTML = '<div class="arm-label-icon"></div>Mode: Cursor-linked';
+          } else {
+            armToggle.innerHTML = '<div class="arm-label-icon"></div>Mode: Auto-align';
+          }
+        }
       }
-    }
 
-    function getAutoTarget() {
-      const rect = svg.getBoundingClientRect();
-      const uncaught = targets.filter(t => !t.caught);
-      if (uncaught.length > 0) {
-        const t = uncaught[0];
-        return {
-          x: rect.left + t.x,
-          y: rect.top + t.y
-        };
-      }
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      return { x: cx, y: cy };
-    }
+      /**
+       * The main animation loop.
+       * @param {number} now - The current high-resolution timestamp.
+       */
+      function animate(now) {
+        let targetX, targetY;
 
-    function animate(now) {
-      let targetX;
-      let targetY;
-
-      if (followCursor) {
-        const elapsed = now - state.lastMove;
-        if (elapsed > IDLE_DELAY) {
-          const t = now / 1000;
-          targetX = window.innerWidth / 2 + Math.cos(t * 0.6) * IDLE_RADIUS;
-          targetY = window.innerHeight / 2 + Math.sin(t * 0.9) * (IDLE_RADIUS * 0.6);
+        if (followCursor) {
+          const elapsed = now - state.lastMove;
+          if (elapsed > IDLE_DELAY) {
+            // If idle, start "roaming"
+            const t = now / 1000;
+            targetX = window.innerWidth / 2 + Math.cos(t * 0.6) * IDLE_RADIUS;
+            targetY = window.innerHeight / 2 + Math.sin(t * 0.9) * (IDLE_RADIUS * 0.6);
+          } else {
+            // Otherwise, follow the mouse
+            targetX = state.mouseX;
+            targetY = state.mouseY;
+          }
         } else {
-          targetX = state.mouseX;
-          targetY = state.mouseY;
+          // If in auto-mode, get the next target
+          const auto = getAutoTarget();
+          targetX = auto.x;
+          targetY = auto.y;
         }
-      } else {
-        const auto = getAutoTarget();
-        targetX = auto.x;
-        targetY = auto.y;
+
+        // Apply smoothing (Linear Interpolation or "lerp")
+        // This gives the movement a slight lag and makes it feel smoother.
+        state.smoothX += (targetX - state.smoothX) * 0.14;
+        state.smoothY += (targetY - state.smoothY) * 0.14;
+
+        // Update all visual components
+        updateBackground(state.smoothX, state.smoothY);
+        updateArm(state.smoothX, state.smoothY, gripperPos);
+        updateTargets(now, gripperPos);
+
+        // Continue the loop
+        requestAnimationFrame(animate);
       }
 
-      state.smoothX += (targetX - state.smoothX) * 0.14;
-      state.smoothY += (targetY - state.smoothY) * 0.14;
+      // --- 5. Initialization ---
+      initTargets();
+      requestAnimationFrame(animate); // Start the animation loop
 
-      updateBackground(state.smoothX, state.smoothY);
-
-      const gripperPos = { x: 0, y: 0 };
-      updateArm(state.smoothX, state.smoothY, gripperPos);
-      updateTargets(now, gripperPos);
-
-      requestAnimationFrame(animate);
-    }
-
-    initTargets();
-    requestAnimationFrame(animate);
+    }); // End of DOMContentLoaded
   </script>
 </body>
 </html>
